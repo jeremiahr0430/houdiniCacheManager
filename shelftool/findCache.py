@@ -17,7 +17,7 @@ def run():
 
     #Get the scene file location
     sceneFileLocation = fmc.sceneFileLocation()
-    print "\nSceneFileLocation is {}\n".format(sceneFileLocation)
+    print ("\nSceneFileLocation is {}\n".format(sceneFileLocation))
 
     # Target Dir Window
 
@@ -25,7 +25,7 @@ def run():
 
 
     cacheFilePathList = filePathDict.values()
-    #print "\nfile path List is {}\n".format(filePathList)
+    #print ("\nfile path List is {}\n".format(filePathList))
 
 
     fmc.copyPasteCache(cacheFilePathList,targetDir)

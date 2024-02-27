@@ -110,7 +110,7 @@ class GenerateNode:
             # check if folder name is needed
             # if '/' is in the user input string, than what's before '/' is the folder name
             folderAndName = self.getFolderName(name[1]) 
-            print 'folderAndName is {} \n'.format(folderAndName)
+            print ('folderAndName is {} \n'.format(folderAndName))
 
             folderName = folderAndName[0]
             objname = folderAndName[1]
@@ -128,16 +128,16 @@ class GenerateNode:
             self.nodeCreated.setCurrent(True,True)
             #   ONLY when created node is a filecache !!!
             if self.type == "filecache":
-                print 'self.type is filecache'
+                print ('self.type is filecache')
                 self.adjustParmForType(self.userInputFolderName, self.nodeCreated)
             elif self.type == 'rop_alembic':
-                print 'self.type is rop_alembic'
+                print ('self.type is rop_alembic')
                 self.adjustParmForType(self.userInputFolderName, self.nodeCreated,'filename','$OS.abc','trange',None)
 
             return self.nodeCreated
         
         else:
-            print "Canceled!"
+            print ("Canceled!")
 
 
 

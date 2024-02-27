@@ -36,7 +36,7 @@ class FindMoveCache:
                 lastFolder = path[-1]
                 path = "/".join(path)+'/'
                 if 'geo' not in lastFolder:
-                    print lastFolder
+                    print ( lastFolder )
                     if not os.path.exists(path):
                         path += self.pathNonExist
                     filecacheNode = kid.path()
@@ -53,8 +53,8 @@ class FindMoveCache:
         #print new_string
 
         hipLocation = self.sceneFileLocation()
-        print hipLocation
-        file_name = '{}/cachedFileDict.json'.format(hipLocation)
+        print ( hipLocation )
+        file_name = f'{hipLocation}/cachedFileDict.json'
         with open(file_name,'w') as j:
             j.write(new_string)
 #            j.write(new_line)
@@ -69,7 +69,7 @@ class FindMoveCache:
         with open(jsonFile) as j:
             data = json.load(j)
         loadedDict = json.dumps(data, indent=2, sort_keys=True)
-        print loadedDict
+        print ( loadedDict )
         cachedFilePathList = []
         valueOfDict = data.get('cachedFiles')
         for item in valueOfDict:
@@ -77,7 +77,7 @@ class FindMoveCache:
             if path not in cachedFilePathList and self.pathNonExist not in path:
                 path = str(path)
                 cachedFilePathList.append(path)
-        print cachedFilePathList 
+        print ( cachedFilePathList ) 
 
 
         return cachedFilePathList
@@ -90,18 +90,18 @@ class FindMoveCache:
     def filePathDict(self,node,createObjMerge=0):
         
         filePathDict = {} #create empty dictionary
-        print '\n'*4+'updated!!!!!!!!!!!!!!!'
+        print ('\n'*4+'updated!!!!!!!!!!!!!!!')
         if 'Sop' in node.type().nameWithCategory():
             obj = node.node("..")
             
-            print 'the sop is in {}'.format(obj)
+            print ('the sop is in {}'.format(obj))
             # all sops for the foreach loop
             children = obj.children()
             
             filenodes = []
             pathList = ''
             pos = node.position()
-            print '\n'*2+'Results are blow!!!!!!!!!!!!!\n'
+            print ('\n'*2+'Results are blow!!!!!!!!!!!!!\n')
             commonPath = ''
             for index,kid in enumerate(children):
                 if 'filecache'in kid.type().nameWithCategory():
@@ -113,7 +113,7 @@ class FindMoveCache:
 
                     filePathDict.update({kidName:path})
                     # Output info to python shell
-                    print 'filecache {} is {}.\nThe path is {}\n'.format(index,kidName,path)
+                    print ('filecache {} is {}.\nThe path is {}\n'.format(index,kidName,path))
                     
                     if createObjMerge:
                         # objmerge to track down all filecache nodes
@@ -127,7 +127,7 @@ class FindMoveCache:
                         #select last objmerge
                         objmerge.setCurrent(True,True)
 
-        print filenodes,'\n',pathList       
+        print (filenodes,'\n',pathList       )
         return filePathDict  
 
     def sceneFileLocation(self):
@@ -151,10 +151,10 @@ class FindMoveCache:
                 break
             targetDir = '/'.join(targetDir)
         # remove last /
-        print '\n\nThe target dir before was {}'.format(targetDir)
+        print ('\n\nThe target dir before was {}'.format(targetDir))
         if targetDir[-1] == '/':
             targetDir[:-1]
-        print '\n\nThe target dir is {}'.format(targetDir)
+        print ('\n\nThe target dir is {}'.format(targetDir))
         return targetDir
 
     def copyPasteCache(self,filePathList,targetDir):
@@ -163,7 +163,7 @@ class FindMoveCache:
             for filepath in filePathList:
                 
                 thisFilePath = filepath.split('/')
-                print 'after split \n{}\n'.format(thisFilePath)
+                print ('after split \n{}\n'.format(thisFilePath))
             
                 fileName = thisFilePath[-1]
                 
@@ -175,14 +175,14 @@ class FindMoveCache:
                     thisFilePath += '/'
 
                 src = thisFilePath
-                print ' after join \n{}\n'.format(thisFilePath)
+                print (' after join \n{}\n'.format(thisFilePath))
             
                 # get rid of first part of the path, which is the scene file path
                 sceneFileLocation = self.sceneFileLocation()
                 thisFilePath = thisFilePath.replace(sceneFileLocation,'')
-               # print '\n\ntarget path section is\n\n{}'.format(thisFilePath)
+               # print ('\n\ntarget path section is\n\n{}'.format(thisFilePath))
                 dst = targetDir + thisFilePath 
-                print 'source is \n{}\ntarget is\n{}'.format(src,dst)
+                print ('source is \n{}\ntarget is\n{}'.format(src,dst))
 
                 try:
                     shutil.move(src, dst)
@@ -190,8 +190,8 @@ class FindMoveCache:
                     os.makedirs(os.path.dirname(dst))
                     shutil.move(src, dst)
                 except :
-                    print '\n'*4
-                    print "Something wrong with {}".format(src)
+                    print ('\n'*4)
+                    print ("Something wrong with {}".format(src))
                 
 #                try:
 #                    distutils.dir_util.copy_tree(src, dst)
@@ -200,13 +200,13 @@ class FindMoveCache:
 #                    distutils.dir_util.copy_tree(src, dst)
 #                except :
 #                    print '\n'*4
-#                    print "Something wrong with {}".format(src)
+#                    print ("Something wrong with {}".format(src))
 
     #def commonPath(self, node):
     #    objmerge = hou.ui.displayConfirmation("Create Object Merge?")
     #    filePathDict = self.filePathDict(node,objmerge)
     #    pathList = self.pathList(filePathDict)
     #    commonPath = findCommonPath.commonPath(pathList)        
-    #    print 'Common path is "{}".'.format(commonPath)
+    #    print ('Common path is "{}".'.format(commonPath))
     #    return commonPath     
 
