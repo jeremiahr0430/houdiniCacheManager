@@ -9,7 +9,7 @@ def run():
 
 
         objMergePath = null_node.path()
-        print "path to fill in on obj merge node created later is %s" % objMergePath
+        print (("path to fill in on obj merge node created later is %s" % objMergePath))
 
 
         # create render object and object merge
@@ -28,7 +28,7 @@ def run():
         renderObj.setCurrent(True) 
 # Run Func Starts here !!!            
     null_node_class= generateNode.GenerateNode('null')
-    print 'Before create node, userInput is {}'.format(null_node_class.userInput)
+    print ('Before create node, userInput is {}'.format(null_node_class.userInput))
     null_node_class.getUserInput()
     null_node = null_node_class.generateNode()
 
@@ -40,7 +40,7 @@ def run():
 
 # check if name exists   
     existList = [kid for kid in nullParent.children() if kid.name() == nullName] 
-    print 'Name clashing! the nodes are below: \n {}'.format(existList)
+    print ('Name clashing! the nodes are below: \n {}'.format(existList))
     if len(existList) >=1: 
         # Ask if still continue
         confirm = hou.ui.displayConfirmation('The is one object with the same name. Continue?', hou.severityType.Message, None, None,None,None, hou.confirmType.OverwriteFile)

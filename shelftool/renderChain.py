@@ -12,9 +12,9 @@ def run():
                 inDifferentObject = True
 
     if inDifferentObject == False:
-        print '\n list before sorted is \n'
+        print (('\n list before sorted is \n'))
         for node in nodes:
-            print node.name()
+            print (node.name())
             
         # sort by y position
         def byPy(x,y):
@@ -27,15 +27,15 @@ def run():
 
         nodes.sort(byPy)
 
-        print '\n list after sorted is \n'
+        print ('\n list after sorted is \n')
         for node in nodes:
-            print node.name()
+            print (node.name())
 
 
 
     for index,node in enumerate(nodes):
         if index ==0:
-            print "Selected nodes in the chain are: \n"
+            print ("Selected nodes in the chain are: \n")
         
         else:
             prenode = nodes[index-1]
@@ -47,7 +47,7 @@ def run():
             parm2.set("opparm `opfullpath('.')` tprerender 0".format())
             parm3.set("1")
             parm4.set("1")
-            print "{}. ".format(index) + node.name() + '\n'
+            print ("{}. ".format(index) + node.name() + '\n')
             
     nodes[0].setCurrent(True,True)
     nodes[-1].setCurrent(True,False)

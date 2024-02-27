@@ -1,3 +1,5 @@
+# This is mainly for creating filecache node in a more user friendly process.
+# it's also used in mergeobj.py which is creating objmerge.
 import hou
 
 class GenerateNode:
