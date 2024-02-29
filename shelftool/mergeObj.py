@@ -1,4 +1,4 @@
-from cachemanage import generateNode
+from houdiniCacheManager.cachemanage import generateNode
 reload(generateNode)
 import hou
 

@@ -1,5 +1,5 @@
 import hou
-from cachemanage import findMoveCache
+from houdiniCacheManager.cachemanage import findMoveCache
 
 import os, shutil,distutils
 

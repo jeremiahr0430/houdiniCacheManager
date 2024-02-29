@@ -2,7 +2,7 @@
 # There are method that is not needed anymore due to houdini update. 
 
 import hou
-from cachemanage import generateNode  # findMoveCache class is called
+from houdiniCacheManager.cachemanage import generateNode  # findMoveCache class is called
 
 reload(generateNode)
 
