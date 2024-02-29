@@ -1,17 +1,25 @@
-import os, shutil,distutils
+import os, shutil,distutils, sys, random
 import hou 
 import json
-
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QCheckBox, QLabel, QSlider, QStackedLayout
+from PyQt5.QtCore import Qt
 #This is a test
 
-class FindMoveCache:
+class FindMoveCache(QWidget):
     
     def __init__(self,node=None):
+        super().__init___()
         self.node = node
         self.hipPath = None
         self.jsonFile = None
         self.pathNonExist =  "Files don't Exist"
+    def init_ui(self):
+        self.widget = QWidget()
 
+        self.button = QPushButton('Jump to the Sop', self.widget)
+        
+        layout = QVBoxLayout(self.widget)
+        layout.addWidget(self.button)
     def selectNode(self):
         node = hou.selectedNodes()[0]
         return node
