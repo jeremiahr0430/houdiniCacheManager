@@ -2,6 +2,7 @@ import hou
 from houdiniCacheManager.cachemanage import findMoveCache
 
 import os, shutil,distutils
+from importlib import reload
 
 reload(findMoveCache)
 
