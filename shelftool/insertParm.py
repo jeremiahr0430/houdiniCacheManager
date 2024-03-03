@@ -64,35 +64,42 @@ def run():
                 ])
         # button to jump to the fileCache sop
         button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback=command, script_callback_language=hou.scriptLanguage.Python)
-        # toggle for multi selection 
-        toggle= hou.ToggleParmTemplate("myToggle", "Select", default_value=False)
 
         # Create a geo loader parameter template
         geoLoader = hou.StringParmTemplate(f"cacheLocation{folderNumber}", "Cache Location", 1, default_value=(loaderPath,))
         geoLoader.setStringType(hou.stringParmType.FileReference)
         geoLoader.setFileType(hou.fileType.Geometry) 
 
-        # Create a separator parameter template
-        separator= hou.SeparatorParmTemplate("mySeparator")
+        # toggle for multi selection 
+        toggle= hou.ToggleParmTemplate(f"myToggle{folderNumber}", "Select", default_value=False)
+
+        # # Create a separator parameter template
+        # separator= hou.SeparatorParmTemplate("mySeparator")
     
         # Add button, loader and toggle to folder for the fileCache sop    
         folder1.addParmTemplate(button)
         folder1.addParmTemplate(geoLoader)
         folder1.addParmTemplate(toggle)
-        folder1.addParmTemplate(separator)
+        # folder1.addParmTemplate(separator)
         
         # Add fileCache sop folder to main folder. (main folder is created to easily clear all parameters)
         f.addParmTemplate(folder1)
 
-    createParms(f,'1','/obj/geo/fileCache')
+    # Testing to create multi parms (range(5) will be replaced by a list of fileCache sop found)
+    for i in range(5):
+        createParms(f,f'{i}',f'/obj/geo/fileCache{i}')
+
     # for i in f:
     #     g.append(i)
 
+    # Create a separator parameter template
+    separator= hou.SeparatorParmTemplate("mySeparator")
     # Function to handle the logic for deleting files
     delete_button= hou.ButtonParmTemplate("deleteButton", "Delete Files")
     # delete_button.setScriptCallback(deleteFiles())
     move_button= hou.ButtonParmTemplate("moveButton", "Move Files")
     # move_button.setScriptCallback(moveFiles())
+    f.addParmTemplate(separator)
     f.addParmTemplate(delete_button)
     f.addParmTemplate(move_button)
     g.append(f)
