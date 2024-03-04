@@ -1,8 +1,29 @@
 
 import hou, subprocess
 
+# This is for giving using options between to create a new cache manager node and not to   
+def createNull():
+    def set_unique_name(base_name):
+        # Assuming 'node' is the Houdini node's parent
+        counter = 1
+        new_name = f"{base_name}_{counter}"
+        while hou.node(f'/obj/{new_name}'):
+            # If a node with the same name exists, increment the counter
+            counter += 1
+            new_name = f"{base_name}_{counter}"
+        return new_name
 
-def run():
+    unique_name = set_unique_name("Cache_Manager")
+    # Create a null node
+        # and name it as Cache_Manager
+    n= hou.node("/obj").createNode('null',unique_name)
+    # and hide existing parms
+    for parm in n.parms():
+        parm.hide(True)
+    node = n
+    return node
+
+def createParms(node):
     def deleteFiles():
         node = hou.pwd()
         toggle_value = node.evalParm("NewFolder.myToggle")
@@ -34,15 +55,12 @@ def run():
         else:
             hou.ui.displayMessage("No file selected.")
 
-    # get node (find the path in your node's info panel)
-    n = hou.selectedNodes()[0]
-
+    n = node
     # Delete all parms before regeneration
-    node = n
-    if node.parm('mainFolder'):
-        ptg = node.parmTemplateGroup()
+    if n.parm('mainFolder'):
+        ptg = n.parmTemplateGroup()
         ptg.remove(ptg.find("mainFolder"))
-        node.setParmTemplateGroup(ptg)
+        n.setParmTemplateGroup(ptg)
         print('parms removed')
 
     # get existing list of parameters for the specified node
@@ -106,6 +124,16 @@ def run():
 
     # apply changes
     n.setParmTemplateGroup(g)  
+
+def run():
+    result = hou.ui.displayMessage("create a new node?", buttons=("Yes", "No"))
+    if result ==0:
+        node =createNull()
+        createParms(node)
+    else:
+        node = hou.selectedNodes()[0]
+        createParms(node)
+
 
 if __name__ == '__main__':
     run()

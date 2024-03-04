@@ -1,3 +1,5 @@
+# NOTE!! 
+# filePathDict method has been changed. Now no nodes needs to be selected. 
 import hou
 from houdiniCacheManager.cachemanage import findMoveCache
 
