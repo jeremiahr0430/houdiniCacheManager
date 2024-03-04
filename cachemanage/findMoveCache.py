@@ -98,9 +98,9 @@ class FindMoveCache():#QWidget):
         
         filePathDict = {} #create empty dictionary
         # all sops for the foreach loop
-        children = hou.node("/obj").children()
-        for k in children:
-            print(k.name())
+        children = hou.node("/obj").allSubChildren(top_down=True, recurse_in_locked_nodes=True)
+        # for k in children:
+        #     print(k.name())
         
         filenodes = []
         pathList = ''
@@ -109,14 +109,14 @@ class FindMoveCache():#QWidget):
         for index,kid in enumerate(children):
             if 'filecache'in kid.type().nameWithCategory():
                 kidName = kid.name()
-                print(f'kid name is {kidName}')
+                # print(f'kid name is {kidName}')
                 filenodes.append(kidName)
                 path = kid.parm('sopoutput').eval()
                 pathList += path+'\n'
 
                 filePathDict.update({kidName:path})
                 # Output info to python shell
-                print (f'filecache {index} is {kidName}.\nThe path is {path}\n')
+                # print (f'filecache {index} is {kidName}.\nThe path is {path}\n')
                 
                 # if createObjMerge:
                 #     # objmerge to track down all filecache nodes
@@ -130,7 +130,7 @@ class FindMoveCache():#QWidget):
                 #     #select last objmerge
                 #     objmerge.setCurrent(True,True)
 
-        print (filenodes,'\n',pathList)
+        # print (filenodes,'\n',pathList)
         outputList = [filePathDict, filenodes, pathList  ]
         return outputList 
 
