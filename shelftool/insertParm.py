@@ -1,6 +1,8 @@
 
 import hou, subprocess
 
+from houdiniCacheManager.cachemanage import findMoveCache
+
 # This is for giving using options between to create a new cache manager node and not to   
 def createNull():
     def set_unique_name(base_name):
@@ -16,11 +18,10 @@ def createNull():
     unique_name = set_unique_name("Cache_Manager")
     # Create a null node
         # and name it as Cache_Manager
-    n= hou.node("/obj").createNode('null',unique_name)
+    node= hou.node("/obj").createNode('null',unique_name)
     # and hide existing parms
-    for parm in n.parms():
+    for parm in node.parms():
         parm.hide(True)
-    node = n
     return node
 
 def createParms(node):
@@ -55,25 +56,7 @@ def createParms(node):
         else:
             hou.ui.displayMessage("No file selected.")
 
-    n = node
-    # Delete all parms before regeneration
-    if n.parm('mainFolder'):
-        ptg = n.parmTemplateGroup()
-        ptg.remove(ptg.find("mainFolder"))
-        n.setParmTemplateGroup(ptg)
-        print('parms removed')
-
-    # get existing list of parameters for the specified node
-    g = n.parmTemplateGroup()
-
-    # define folders and parameters
-    f = hou.FolderParmTemplate(
-            'mainFolder', 
-            'Main Folder', 
-            folder_type=hou.folderType.Simple,parm_templates=[
-            ]
-        )
-    def createParms(mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
+    def insertParms(mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
         # Create folder for the found fileCache sop
         folder1 = hou.FolderParmTemplate(
                 f'folder{folderNumber}', 
@@ -101,11 +84,33 @@ def createParms(node):
         # folder1.addParmTemplate(separator)
         
         # Add fileCache sop folder to main folder. (main folder is created to easily clear all parameters)
-        f.addParmTemplate(folder1)
+        mainFolder.addParmTemplate(folder1)
+
+    # Delete all parms before regeneration
+    if node.parm('mainFolder'):
+        ptg = node.parmTemplateGroup()
+        ptg.remove(ptg.find("mainFolder"))
+        node.setParmTemplateGroup(ptg)
+        print('parms removed')
+
+    # get existing list of parameters for the specified node
+    group = node.parmTemplateGroup()
+
+    # define folders and parameters
+    mainFolder = hou.FolderParmTemplate(
+            'mainFolder', 
+            'Main Folder', 
+            folder_type=hou.folderType.Simple,parm_templates=[
+            ]
+        )
 
     # Testing to create multi parms (range(5) will be replaced by a list of fileCache sop found)
-    for i in range(5):
-        createParms(f,f'{i}',f'/obj/geo/fileCache{i}')
+
+    fmc = findMoveCache.FindMoveCache()
+    #Get the Dictionary
+    filePathDict,fileNodes, pathList = fmc.filePathDict() 
+    for i,node in enumerate(fileNodes):
+        insertParms(mainFolder,i,node,pathList[i])
 
     # for i in f:
     #     g.append(i)
@@ -117,19 +122,21 @@ def createParms(node):
     # delete_button.setScriptCallback(deleteFiles())
     move_button= hou.ButtonParmTemplate("moveButton", "Move Files")
     # move_button.setScriptCallback(moveFiles())
-    f.addParmTemplate(separator)
-    f.addParmTemplate(delete_button)
-    f.addParmTemplate(move_button)
-    g.append(f)
+    mainFolder.addParmTemplate(separator)
+    mainFolder.addParmTemplate(delete_button)
+    mainFolder.addParmTemplate(move_button)
+    group.append(mainFolder)
 
     # apply changes
-    n.setParmTemplateGroup(g)  
+    node.setParmTemplateGroup(group)  
 
 def run():
     result = hou.ui.displayMessage("create a new node?", buttons=("Yes", "No"))
     if result ==0:
         node =createNull()
-        createParms(node)
+        # createParms(node)
+        print(f'node is {node}')
+        node
     else:
         node = hou.selectedNodes()[0]
         createParms(node)
