@@ -2,6 +2,8 @@
 import hou, subprocess
 
 from houdiniCacheManager.cachemanage import findMoveCache
+from importlib import reload
+reload(findMoveCache)
 
 # This is for giving using options between to create a new cache manager node and not to   
 def createNull():
@@ -18,11 +20,11 @@ def createNull():
     unique_name = set_unique_name("Cache_Manager")
     # Create a null node
         # and name it as Cache_Manager
-    node= hou.node("/obj").createNode('null',unique_name)
+    nullNode= hou.node("/obj").createNode('null',unique_name)
     # and hide existing parms
-    for parm in node.parms():
+    for parm in nullNode.parms():
         parm.hide(True)
-    return node
+    return nullNode
 
 def createParms(node):
     def deleteFiles():
@@ -56,7 +58,13 @@ def createParms(node):
         else:
             hou.ui.displayMessage("No file selected.")
 
-    def insertParms(mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
+    def insertParms(node,mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
+        def jumpCommand():
+            sop = hou.node(folderLabel)
+            sop.setSelected(True)
+            hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor).setCurrentNode(sop)
+
+        node.setSelected(True)
         # Create folder for the found fileCache sop
         folder1 = hou.FolderParmTemplate(
                 f'folder{folderNumber}', 
@@ -64,6 +72,7 @@ def createParms(node):
                 folder_type=hou.folderType.Simple,parm_templates=[
                 ])
         # button to jump to the fileCache sop
+        command = jumpCommand()
         button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback=command, script_callback_language=hou.scriptLanguage.Python)
 
         # Create a geo loader parameter template
@@ -108,9 +117,10 @@ def createParms(node):
 
     fmc = findMoveCache.FindMoveCache()
     #Get the Dictionary
-    filePathDict,fileNodes, pathList = fmc.filePathDict() 
-    for i,node in enumerate(fileNodes):
-        insertParms(mainFolder,i,node,pathList[i])
+    filePathDict,filecacheNames, pathList, sopLocations= fmc.filePathDict() 
+    for i,sopL in enumerate(sopLocations):
+        insertParms(node,mainFolder,i,sopL,pathList[i])
+        print(f'the sop {filecacheNames[i]} \nIts path is {pathList[i]}')
 
     # for i in f:
     #     g.append(i)
@@ -133,10 +143,8 @@ def createParms(node):
 def run():
     result = hou.ui.displayMessage("create a new node?", buttons=("Yes", "No"))
     if result ==0:
-        node =createNull()
-        # createParms(node)
-        print(f'node is {node}')
-        node
+        node = createNull()
+        createParms(node)
     else:
         node = hou.selectedNodes()[0]
         createParms(node)

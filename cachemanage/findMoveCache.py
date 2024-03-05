@@ -92,27 +92,43 @@ class FindMoveCache():#QWidget):
 #        Get file path Dictionary
 #        if create object merge to help track down filecache nodes
 
-# Check if in sop level
 
     def filePathDict(self,node = None ,createObjMerge=0):
-        
+        def replaceOverlapping(originalString, searchString = hou.getenv("HIP"), replacementString = '$HIP'): 
+            # Find the start index of the search string
+            startIndex = originalString.find(searchString)
+            # Check if the search string is found
+            if startIndex != -1:
+                # Calculate the end index for the replacement
+                endIndex = startIndex + len(searchString)
+                # Replace the overlapping section
+                newString = originalString[:startIndex] + replacementString + originalString[endIndex:]
+                return newString
+            else:
+                print(f"Search string '{searchString}' not found in the original string.")
+                return originalString
+
         filePathDict = {} #create empty dictionary
         # all sops for the foreach loop
         children = hou.node("/obj").allSubChildren(top_down=True, recurse_in_locked_nodes=True)
         # for k in children:
         #     print(k.name())
         
-        filenodes = []
-        pathList = ''
+        filecacheNames = []
+        sopLocations = []
+        
+        pathList = [] 
         # pos = node.position()
         commonPath = ''
         for index,kid in enumerate(children):
             if 'filecache'in kid.type().nameWithCategory():
                 kidName = kid.name()
                 # print(f'kid name is {kidName}')
-                filenodes.append(kidName)
+                filecacheNames.append(kidName)
+                sopLocations.append(kid.path())
                 path = kid.parm('sopoutput').eval()
-                pathList += path+'\n'
+                path = replaceOverlapping(path)
+                pathList.append(path) 
 
                 filePathDict.update({kidName:path})
                 # Output info to python shell
@@ -131,7 +147,7 @@ class FindMoveCache():#QWidget):
                 #     objmerge.setCurrent(True,True)
 
         # print (filenodes,'\n',pathList)
-        outputList = [filePathDict, filenodes, pathList  ]
+        outputList = [filePathDict, filecacheNames, pathList,sopLocations]
         return outputList 
 
     def sceneFileLocation(self):
