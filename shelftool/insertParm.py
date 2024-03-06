@@ -59,11 +59,6 @@ def createParms(node):
             hou.ui.displayMessage("No file selected.")
 
     def insertParms(node,mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
-        # def jumpCommand():
-        #     sop = hou.node(folderLabel)
-        #     sop.setSelected(True)
-        #     hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor).setCurrentNode(sop)
-
         node.setSelected(True)
         # Create folder for the found fileCache sop
         folder1 = hou.FolderParmTemplate(
@@ -72,7 +67,7 @@ def createParms(node):
                 folder_type=hou.folderType.Simple,parm_templates=[
                 ])
         # button to jump to the fileCache sop
-        # command = jumpCommand()
+        command =  'hou.phm().jumpToSop(kwargs)'
         button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback= command, script_callback_language=hou.scriptLanguage.Python)
 
         # Create a geo loader parameter template

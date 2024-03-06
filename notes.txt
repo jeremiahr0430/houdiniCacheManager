@@ -1,4 +1,9 @@
-need to work on click a button and that button knows what parameter it is of.
-the generated button is not shown in hda type properties. so not sure if it can call hda modular script. 
-try to use exec() and a script in sparse parameter.
-callback command can be created when button is created. 
+    
+    need to work on click a button and that button knows what parameter it is of.
+    the generated button is not shown in hda type properties. so not sure if it can call hda modular script. 
+    try to use exec() and a script in sparse parameter.
+    callback command can be created when button is created. 
+above solved
+
+could not get folder of a parameter by parameter name?
+could not find folder's label by folder's name?
