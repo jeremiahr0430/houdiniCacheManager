@@ -5,5 +5,12 @@
     callback command can be created when button is created. 
 above solved
 
+2024 03 06 am
 could not get folder of a parameter by parameter name?
 could not find folder's label by folder's name?
+
+find sop location. Done!
+1. extracting number from button's name 
+2.use the number as index to find correct element from sop list. 
+3. sop list is output by findMoveCache.py.  
+Additionally, changed the command for the button in insertParm.py
