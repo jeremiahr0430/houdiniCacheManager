@@ -59,10 +59,10 @@ def createParms(node):
             hou.ui.displayMessage("No file selected.")
 
     def insertParms(node,mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
-        def jumpCommand():
-            sop = hou.node(folderLabel)
-            sop.setSelected(True)
-            hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor).setCurrentNode(sop)
+        # def jumpCommand():
+        #     sop = hou.node(folderLabel)
+        #     sop.setSelected(True)
+        #     hou.ui.paneTabOfType(hou.paneTabType.NetworkEditor).setCurrentNode(sop)
 
         node.setSelected(True)
         # Create folder for the found fileCache sop
@@ -72,8 +72,8 @@ def createParms(node):
                 folder_type=hou.folderType.Simple,parm_templates=[
                 ])
         # button to jump to the fileCache sop
-        command = jumpCommand()
-        button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback=command, script_callback_language=hou.scriptLanguage.Python)
+        # command = jumpCommand()
+        button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback= command, script_callback_language=hou.scriptLanguage.Python)
 
         # Create a geo loader parameter template
         geoLoader = hou.StringParmTemplate(f"cacheLocation{folderNumber}", "Cache Location", 1, default_value=(loaderPath,))
@@ -140,14 +140,15 @@ def createParms(node):
     # apply changes
     node.setParmTemplateGroup(group)  
 
-def run():
-    result = hou.ui.displayMessage("create a new node?", buttons=("Yes", "No"))
-    if result ==0:
-        node = createNull()
-        createParms(node)
-    else:
-        node = hou.selectedNodes()[0]
-        createParms(node)
+def run(node):
+    # result = hou.ui.displayMessage("create a new node?", buttons=("Yes", "No"))
+    # if result ==0:
+    #     node = createNull()
+    #     createParms(node)
+    # else:
+    #     node = hou.selectedNodes()[0]
+    #     createParms(node)
+    createParms(node)
 
 
 if __name__ == '__main__':
