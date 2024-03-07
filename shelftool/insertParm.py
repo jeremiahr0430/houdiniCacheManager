@@ -76,7 +76,7 @@ def createParms(node):
         geoLoader.setFileType(hou.fileType.Geometry) 
 
         # toggle for multi selection 
-        toggle= hou.ToggleParmTemplate(f"myToggle{folderNumber}", "Select", default_value=False)
+        toggle= hou.ToggleParmTemplate(f"selectCacheToggle{folderNumber}", "Select", default_value=False)
 
         # # Create a separator parameter template
         # separator= hou.SeparatorParmTemplate("mySeparator")
@@ -122,12 +122,16 @@ def createParms(node):
 
     # Create a separator parameter template
     separator= hou.SeparatorParmTemplate("mySeparator")
+    # select all toggle
+    controlToggalCommand = 'hou.phm().setAllToggles(kwargs)'
+    selectAllToggle = hou.ToggleParmTemplate("selectAllCache", "Select All Cache", default_value=False,script_callback=controlToggalCommand, script_callback_language=hou.scriptLanguage.Python)
     # Function to handle the logic for deleting files
     delete_button= hou.ButtonParmTemplate("deleteButton", "Delete Files")
     # delete_button.setScriptCallback(deleteFiles())
     move_button= hou.ButtonParmTemplate("moveButton", "Move Files")
     # move_button.setScriptCallback(moveFiles())
     mainFolder.addParmTemplate(separator)
+    mainFolder.addParmTemplate(selectAllToggle)
     mainFolder.addParmTemplate(delete_button)
     mainFolder.addParmTemplate(move_button)
     group.append(mainFolder)
