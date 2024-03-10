@@ -1,6 +1,7 @@
 import hou
 import subprocess
-import houdiniCacheManager.hdaModular.cacheSopUtils as csu
+from houdiniCacheManager.hdaModular import cacheSopUtils 
+from houdiniCacheManager.cachemanage import findMoveCache
 
 def rmCacheFiles(kwargs):
     # Get the current node (assumes this is called within an HDA callback)
@@ -8,14 +9,25 @@ def rmCacheFiles(kwargs):
 
     # Get all 'selectCacheToggle' toggles
     toggle_parms = [parm for parm in node.parms() if parm.name().startswith('selectCacheToggle')]
+    cacheLocations = [parm for parm in node.parms() if parm.name().startswith('cacheLocation')]
 
     # Create a list of file paths to be removed
     files_to_remove = []
+    # def findFilePathBySopName(sopName):
+    #     fmc = findMoveCache.FindMoveCache()
+    #     filePathDict,filecacheNames, pathList, sopLocations= fmc.filePathDict() 
+    #     # find the folder's label 
+    #     filePath = filePathDict[sopName] 
+    #     return filePath
     for toggle_parm in toggle_parms:
         # check if toggle is on
         if toggle_parm.eval():
             # Assuming the associated cache file has the same name as the toggle
-            cache_file_path = csu.findFilePathBySopName(toggle_parm) 
+            print(f'toggle parm name is {toggle_parm.name()}')
+            parmNum = cacheSopUtils.findParmNum(toggle_parm)
+            parmName = cacheLocations[int(parmNum)].name()
+            print(f'parm name is {parmName}')
+            cache_file_path = node.parm(parmName).eval()  #cacheSopUtils.findFilePathBySopName(parmName) 
             print(f'the found file path is {cache_file_path}')
             files_to_remove.append(cache_file_path)
 

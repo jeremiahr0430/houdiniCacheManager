@@ -7,8 +7,8 @@ from houdiniCacheManager.cachemanage import findMoveCache
 def extractDigits(input_string):
     digits = [char for char in input_string if char.isdigit()]
     return ''.join(digits)
-def findParmNum(kwargs):
-    parmName = kwargs['parm'].name()
+def findParmNum(parm):
+    parmName = parm.name()
     parmNum = extractDigits(parmName)
     return parmNum
 def findSopPathByNum(parmNum):

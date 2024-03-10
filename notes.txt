@@ -14,3 +14,13 @@ find sop location. Done!
 2.use the number as index to find correct element from sop list. 
 3. sop list is output by findMoveCache.py.  
 Additionally, changed the command for the button in insertParm.py
+
+
+20240310 pm
+make extractDigits function a separated file
+adding moveCacheFile.py to deal with rm and mv cache files.
+Traceback (most recent call last):
+  File "Object/cacheManager::1.0/deleteButton", line 1, in <module>
+  File "E:\RuiHuang/GitHub/python3.9libs\houdiniCacheManager\hdaModular\moveCacheFiles.py", line 18, in rmCacheFiles
+    cache_file_path = csu.findFilePathBySopName(toggle_parm.name())
+AttributeError: module 'houdiniCacheManager.hdaModular.cacheSopUtils' has no attribute 'findFilePathBySopName'
