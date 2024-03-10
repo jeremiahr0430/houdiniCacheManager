@@ -6,6 +6,7 @@ from importlib import reload
 reload(findMoveCache)
 
 # This is for giving using options between to create a new cache manager node and not to   
+# This is not needed any more as parameters will be created on an HDA
 def createNull():
     def set_unique_name(base_name):
         # Assuming 'node' is the Houdini node's parent
@@ -27,38 +28,8 @@ def createNull():
     return nullNode
 
 def createParms(node):
-    def deleteFiles():
-        node = hou.pwd()
-        toggle_value = node.evalParm("NewFolder.myToggle")
-        file_value = node.evalParm("NewFolder.myFile")
 
-        if toggle_value and file_value:
-            # Delete files if toggle is on
-            hou.ui.displayMessage(f"Deleting file: {file_value}")
-            # Add your file deletion logic here
-        else:
-            hou.ui.displayMessage("Toggle is off or no file selected.")
-
-    # Function to handle the logic for moving files
-    def moveFiles():
-        node = hou.pwd()
-        file_value = node.evalParm("NewFolder.myFile")
-
-        if file_value:
-            # Prompt the user to select a folder
-            destination_folder = hou.ui.selectFile(title="Select Destination Folder", file_type=hou.fileType.Directory)
-
-            if destination_folder:
-                # Move the file using a command line command
-                command = f"move {file_value} {destination_folder}"
-                subprocess.run(command, shell=True)
-                hou.ui.displayMessage(f"File moved to: {destination_folder}")
-            else:
-                hou.ui.displayMessage("No destination folder selected.")
-        else:
-            hou.ui.displayMessage("No file selected.")
-
-    def insertParms(node,mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo',command="print('empty command')"):
+    def insertParms(node,mainFolder,folderNumber, folderLabel,loaderPath='path/to/your/file.geo'):
         node.setSelected(True)
         # Create folder for the found fileCache sop
         folder1 = hou.FolderParmTemplate(
@@ -67,7 +38,7 @@ def createParms(node):
                 folder_type=hou.folderType.Simple,parm_templates=[
                 ])
         # button to jump to the fileCache sop
-        command =  'hou.phm().jumpToSop(kwargs)'
+        command =  'hou.phm().jumpToSop.jumpToSop(kwargs)'
         button = hou.ButtonParmTemplate(f"jumpToSop{folderNumber}", "Jump to the fileCache", script_callback= command, script_callback_language=hou.scriptLanguage.Python)
 
         # Create a geo loader parameter template
@@ -123,10 +94,11 @@ def createParms(node):
     # Create a separator parameter template
     separator= hou.SeparatorParmTemplate("mySeparator")
     # select all toggle
-    controlToggalCommand = 'hou.phm().setAllToggles(kwargs)'
+    controlToggalCommand = 'hou.phm().setAllToggles.setAllToggles(kwargs)'
     selectAllToggle = hou.ToggleParmTemplate("selectAllCache", "Select All Cache", default_value=False,script_callback=controlToggalCommand, script_callback_language=hou.scriptLanguage.Python)
     # Function to handle the logic for deleting files
-    delete_button= hou.ButtonParmTemplate("deleteButton", "Delete Files")
+    deleteCommand = 'hou.phm().moveCacheFiles.rmCacheFiles(kwargs)' 
+    delete_button= hou.ButtonParmTemplate("deleteButton", "Delete Files", script_callback = deleteCommand, script_callback_language=hou.scriptLanguage.Python)
     # delete_button.setScriptCallback(deleteFiles())
     move_button= hou.ButtonParmTemplate("moveButton", "Move Files")
     # move_button.setScriptCallback(moveFiles())
